@@ -1,12 +1,15 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, Float, Date
-from sqlalchemy import create_engine
+from sqlalchemy import Table, Column, Integer, String, MetaData, Float
+from sqlalchemy import create_engine, inspect
 
-engine = create_engine("sqlite:///database.db", echo=True)
+engine = create_engine("sqlite:///clean_stations.db")
+insp = inspect(engine)
+
+
 meta = MetaData()
 
 stations = Table(
    "stations", meta,
-   Column("station", String, primary_key=True),
+   Column("station", String),
    Column("latitude", Float),
    Column("longitude", Float),
    Column("elevation", Integer),
@@ -17,11 +20,11 @@ stations = Table(
 
 measure = Table(
    "measure", meta,
-   Column("station", String, primary_key=True),
-   Column("date", Integer),
+   Column("station", String),
+   Column("date", String),
    Column("precip", Float),
    Column("tobs", Integer),
 )
 
 meta.create_all(engine)
-print(engine.table_names())
+print(insp.get_table_names())
